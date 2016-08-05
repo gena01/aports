@@ -1,0 +1,37 @@
+# Contributor: Gennady Feldman <gena01@gmail.com>
+# Maintainer: Gennady Feldman <gena01@gmail.com>
+pkgname=php7-scrypt
+_pkgreal=scrypt
+pkgver=1.4.2
+_pkgver=${pkgver}
+pkgrel=0
+pkgdesc="A PHP wrapper to Colin Percival's scrypt implementation."
+url="http://pecl.php.net/package/$_pkgreal"
+arch="all"
+license="BSD"
+depends=
+pecldepends="php7-dev autoconf"
+makedepends="$pecldepends"
+install=""
+subpackages=""
+source="http://pecl.php.net/get/$_pkgreal-$_pkgver.tgz"
+
+builddir="$srcdir"/$_pkgreal-$_pkgver
+
+build() {
+        cd "$builddir"
+        phpize7 || return 1
+        ./configure --prefix=/usr --with-php-config=php-config7 || return 1
+        make || return 1
+}
+
+package() {
+        cd "$builddir"
+        make INSTALL_ROOT="$pkgdir"/ install || return 1
+        install -d "$pkgdir"/etc/php7/conf.d || return 1
+        echo "extension=$_pkgreal.so" > "$pkgdir"/etc/php7/conf.d/40_$_pkgreal.ini
+}
+
+md5sums="d630bf15dbd3fd4d951c6b7b1acd53be  scrypt-1.4.2.tgz"
+sha256sums="94c7e7f3378f6ddf1755f59d99f61570f380df2b2fa630853a932d58fa38389c  scrypt-1.4.2.tgz"
+sha512sums="34a87e63250dcfb21b3d36f90a4e5f4bac9f0623917ceb0d613d49112ce0e13df9a93fb0730fb797be6337d023dc490fb881902b5492309fe8bf3e6fd5e685a0  scrypt-1.4.2.tgz"
